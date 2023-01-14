@@ -1,0 +1,67 @@
+name: Word_Handict
+description: Serach @Handict
+host: WORD
+api_set: {}
+script:
+  content: |
+    $("#run").click(() => tryCatch(run));
+
+    function run() {
+      return Word.run(function(context) {
+        var range = context.document.getSelection();
+        //range.font.color = "red";
+        range.load("text");
+        //console.log(2);
+
+        return context.sync().then(function() {
+          $("#main").attr("src", "https://www.zdic.net/hans/" + range.text);
+          //console.log('1The selected text was "' + range.text + '".');
+        });
+      });
+    }
+
+    /** Default helper for invoking an action and handling errors. */
+    function tryCatch(callback) {
+      Promise.resolve()
+        .then(callback)
+        .catch(function(error) {
+          // Note: In a production add-in, you'd want to notify the user through your add-in's UI.
+          console.error(error);
+        });
+    }
+  language: typescript
+template:
+  content: >+
+    <button id="run" class="ms-Button">
+        <span class="ms-Button-label">Search selection</span>
+    </button>
+
+    <iframe style="width: 100%; height: 700px;" id="main"
+    src="https://www.zdic.net"></iframe>
+
+  language: html
+style:
+  content: |-
+    section.samples {
+        margin-top: 20px;
+    }
+
+    section.samples .ms-Button, section.setup .ms-Button {
+        display: block;
+        margin-bottom: 5px;
+        margin-left: 20px;
+        min-width: 80px;
+    }
+  language: css
+libraries: |
+  https://appsforoffice.microsoft.com/lib/1/hosted/office.js
+  @types/office-js
+
+  office-ui-fabric-js@1.4.0/dist/css/fabric.min.css
+  office-ui-fabric-js@1.4.0/dist/css/fabric.components.min.css
+
+  core-js@2.4.1/client/core.min.js
+  @types/core-js
+
+  jquery@3.1.1
+  @types/jquery@3.3.1
